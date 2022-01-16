@@ -3,7 +3,7 @@ pragma solidity ^0.4.0;
 contract HelloWorld {
     string public message;
 
-    function setMessage(string newMesnsage) public {
+    function setMessage(string newMessage) public {
         message = newMessage;
     }
 
