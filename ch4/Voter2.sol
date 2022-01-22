@@ -4,8 +4,8 @@ pragma experimental ABIEncoderV2;
 contract Voter{
 
     struct OptionPos{
-        uint pos;
-        bool exists;
+        uint pos; //the position, an int
+        bool exists; //required due to limitation with solidity
     }
 
     uint[] public votes;
@@ -17,31 +17,22 @@ contract Voter{
         options = _options;
         votes.length = options.length;
 
-        for (uint i = 0; i < options.length; i++){
-            OptionPos memory optionPos = OptionPos(i,true);
-            string optionName = options[i];
-            posOfOption[optionName] = optionPos;
+        for (uint i = 0; i < options.length; i++){ 
+            OptionPos memory optionPos = OptionPos(i,true); //creates OptionPos structs, which will be the value in the mapping
+            string optionName = options[i]; //creates optionName strings, which will be the key
+            posOfOption[optionName] = optionPos; //makes the mapping entry
 
         }
-    }
-
-    function vote(uint option) public{
-        require(0 <= option && option < options.length, "Invalid option");
-        require(!hasVoted[msg.sender], "Account has already voted");
-
-        votes[option] = votes[option] + 1;
-        hasVoted[msg.sender] = true;
-
     }
 
     function vote(string optionName) public {
         require(!hasVoted[msg.sender], "Account has already voted");
 
-        OptionPos memory optionPos = posOfOPtion[optionName];
+        OptionPos memory optionPos = posOfOption[optionName]; //gets the current value of votes 
         require(optionPos.exists, "Option does not exist");
 
-        votes[optionPos.pos] = votes[optionPos.pos] + 1;
-        hasVoted[msg.sender] = true;
+        votes[optionPos.pos] = votes[optionPos.pos] + 1; //increments it
+        hasVoted[msg.sender] = true; //prevents repeated voting
     }
 
     function getOptions() public view returns (string[]){
